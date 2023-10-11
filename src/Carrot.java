@@ -2,6 +2,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
+import java.awt.Polygon;
 
 import java.util.Arrays;
 
@@ -76,10 +78,13 @@ public class Carrot extends Object {
         g2.scale((double) deathCount/(RabbitApp.FPS*2), (double) deathCount/(RabbitApp.FPS*2));
 
         g2.setColor(new Color(255, 127, 39));
-        g2.fillOval((int) (-dim.x/4), (int) (-dim.y/2), (int) (dim.x/2), (int) (dim.y/4));
+        Ellipse2D.Double ellipse = new Ellipse2D.Double((int) (-dim.x/4), (int) (-dim.y/2), (int) (dim.x/2), (int) (dim.y/4));
+        g2.fill(ellipse);
+
         int[] xPoints = {(int) (-dim.x/4), 0, (int) (dim.x/4)};
         int[] yPoints = {(int) (-dim.y/8*3), (int) (dim.y/2), (int) (-dim.y/8*3)};
-        g2.fillPolygon(xPoints, yPoints, 3);
+        Polygon polygon = new Polygon(xPoints, yPoints, 3);
+        g2.fill(polygon);
 
         g2.setTransform(af);
     }

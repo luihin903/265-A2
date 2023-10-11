@@ -2,6 +2,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
+import java.awt.Polygon;
 
 import processing.core.PVector;
 
@@ -42,15 +44,17 @@ public class Tree extends Object {
         g2.translate(pos.x, pos.y);
 
         g2.setColor(new Color(147, 94, 40));
-        g2.fillRect((int) (-dim.x/4), 0, (int) (dim.x/2), (int) (dim.y/2));
+        Rectangle2D.Double rect = new Rectangle2D.Double((int) (-dim.x/4), 0, (int) (dim.x/2), (int) (dim.y/2));
+        g2.fill(rect);
         
         g2.setColor(new Color(0, 155, 0));
         int[] xPoints = {(int) (-dim.x/2), 0, (int) (dim.x/2)};
         int[] yPoints = {0, (int) (-dim.y/2), 0};
-        g2.fillPolygon(xPoints, yPoints, 3);
+        Polygon polygon = new Polygon(xPoints, yPoints, 3);
+        g2.fill(polygon);
 
         g2.setColor(Color.BLACK);
-        g2.drawPolygon(xPoints, yPoints, 3);
+        g2.draw(polygon);
 
         g2.setTransform(af);
     }
