@@ -5,6 +5,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 
+import java.util.ArrayList;
+
 import processing.core.PVector;
 
 public class Rabbit extends Object {
@@ -34,7 +36,7 @@ public class Rabbit extends Object {
 
     @Override
     public void draw(Graphics2D g2) {
-        drawBoundingBox(g2);
+        if (RabbitApp.drawBoundingBox) drawBoundingBox(g2);
 
         AffineTransform af = g2.getTransform();
 
@@ -121,7 +123,7 @@ public class Rabbit extends Object {
         g2.setTransform(af);
     }
 
-    public void move(Carrot[] carrots, Dimension s) {
+    public void move(ArrayList<Carrot> carrots, Dimension s) {
         
         if (moving) {
             seek(carrots);
@@ -139,24 +141,26 @@ public class Rabbit extends Object {
         }
     }
 
-    private void seek(Carrot[] carrots) {
-        double distance = 9999;
-
-        for (Carrot c : carrots) {
-            if (c != null) {
-                if (PVector.dist(c.pos, this.pos) < distance) {
-                    distance = PVector.dist(c.pos, this.pos);
-                    vel = c.pos.copy();
-                    vel.sub(this.pos);
-                }
-            }
+    /*
+     * 1. check if the arraylist is empty
+     * 2. get the first carrot
+     * 3. minus this.pos from carrot.pos to get this.vel
+     * 4. the rabbit will stop and eat the food on the way
+     */
+    private void seek(ArrayList<Carrot> carrots) {
+        if (carrots.size() != 0) {
+            Carrot c = carrots.get(0);
+            vel = c.pos.copy();
+            vel.sub(this.pos);
         }
     }
 
-    public void eat(Carrot[] carrots) {
-        for (int i = 0; i < carrots.length; i ++) {
-            if (carrots[i] != null) {
-                if (PVector.dist(this.pos, carrots[i].pos) < 50) {
+    public void eat(ArrayList<Carrot> carrots) {
+        start();
+        
+        for (int i = 0; i < carrots.size(); i ++) {
+            if (carrots.get(i) != null) {
+                if (PVector.dist(this.pos, carrots.get(i).pos) < 50) {
                     stop();
                     Carrot.eat(i, this);
                 }

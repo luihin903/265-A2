@@ -1,11 +1,10 @@
 import javax.swing.JFrame;
 
-import processing.core.PVector;
-
 public class RabbitApp extends JFrame {
 	
 	public static final int margin = 20;
 	public static final int FPS = 30;
+	public static final boolean drawBoundingBox = false;
 
 	public RabbitApp(String title) {
 		super(title);

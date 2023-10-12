@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -22,12 +24,14 @@ public class RabbitPanel extends JPanel implements ActionListener {
         size = initialSize;
 
         rabbit = new Rabbit(new PVector(size.width/2, size.height/2), new PVector(50, 100), 2);
-        Carrot.init(5, initialSize);
         Tree.init(5, initialSize);
         Flower.init(5, initialSize);
 
         t = new Timer((int) (1000/RabbitApp.FPS), this);
         t.start();
+
+        addMouseListener(new MyMouseAdapter());
+        addMouseMotionListener(new MyMouseMotionAdapter());
     }
 
     @Override
@@ -57,8 +61,39 @@ public class RabbitPanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         rabbit.move(Carrot.get(), getSize());
         rabbit.eat(Carrot.get());
-        Carrot.count(getSize());
+        Carrot.grow();
 
         repaint();
+    }
+
+    /*
+     * 1. check if it is a double-click using modulus
+     * 2. pass the event to the Carrot class and create a new carrot
+     * 3. pass the event to change the carrot's size and position
+     * 4. the carrot stop growing if the mouse is no longer pressing
+     * 5. the carrot sclaes based on the size field when drawing
+     */
+    private class MyMouseAdapter extends MouseAdapter {
+        public void mousePressed(MouseEvent e) {
+            if (e.getClickCount() % 2 == 0) {
+                Carrot.start(e, getSize());
+            }
+            // 3) remove when Ctrl-click
+            if (e.isControlDown()) {
+                for (Carrot c : Carrot.get()) {
+                    if (c.hit(e)) Carrot.get().remove(c);
+                }
+            }
+        }
+
+        public void mouseReleased(MouseEvent e) {
+            Carrot.stop();
+        }
+    }
+
+    private class MyMouseMotionAdapter extends MouseAdapter{
+        public void mouseDragged(MouseEvent e) {
+            Carrot.grow(e);
+        }
     }
 }
