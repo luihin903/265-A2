@@ -103,28 +103,34 @@
               "content": "* Please note: For collision of creature vs. creature or creature vs. food, it must bedone by way of intersecting between their outlines and dynamic bounding boxes, which involves with Area class and non-drawing transformations. Usingold static bounding box approach will get 0 for the collision part.",
               "id": 1698285826495,
               "level": "default",
-              "done": false,
-              "start": 1698285826495
+              "done": true,
+              "start": 1698285826495,
+              "focus": false,
+              "end": 1698296852173
             }
           }
         ],
         "todo": {
-          "content": "7) When two different sized creatures collide, the smaller one has to turn away (i.e.change the direction by an appropriate angle in which it is moving) for aninterval of 1 to 4 seconds (test to find the desired interval that works best foryou so that the effect (i.e. turning and resuming) is obvious to be observed.Again employ a custom timer to count and then resume pursing its desired foodagain, while the larger one keeps its moving in its direction. This way the largecreature can “push aside” smaller ones when pursuing the same food source.*",
+          "content": "7) When two different sized creatures collide, the smaller one has to turn away (i.e.change the direction by an appropriate angle in which it is moving) for an interval of 1 to 4 seconds (test to find the desired interval that works best for you so that the effect (i.e. turning and resuming) is obvious to be observed. Again employ a custom timer to count and then resume pursing its desired foodagain, while the larger one keeps its moving in its direction. This way the large creature can “push aside” smaller ones when pursuing the same food source.*",
           "id": 1698285817055,
           "level": "default",
-          "done": false,
-          "start": 1698285817055
+          "done": true,
+          "start": 1698285817055,
+          "focus": false,
+          "end": 1698302476726
         }
       },
       {
         "key": 1698285834879,
         "children": [],
         "todo": {
-          "content": "8) For collision between creature and edges of the environment, it must be handledwith collision avoidance using the force model (as covered in week 6), i.e. identifythe potential collision preemptively and avoid the collision gracefully, rather thanbump into it before turning away.",
+          "content": "8) For collision between creature and edges of the environment, it must be handled with collision avoidance using the force model (as covered in week 6), i.e. identify the potential collision preemptively and avoid the collision gracefully, rather thanbump into it before turning away.",
           "id": 1698285834879,
           "level": "default",
-          "done": false,
-          "start": 1698285834879
+          "done": true,
+          "start": 1698285834879,
+          "focus": false,
+          "end": 1698299233827
         }
       },
       {
@@ -137,20 +143,24 @@
                 "key": 1698285882503,
                 "children": [],
                 "todo": {
-                  "content": "** Please note in order for the actions to be sensible and cohesive, you need toimplement both features to qualify for the bonus points",
+                  "content": "** Please note in order for the actions to be sensible and cohesive, you need to implement both features to qualify for the bonus points",
                   "id": 1698285882503,
                   "level": "default",
-                  "done": false,
-                  "start": 1698285882503
+                  "done": true,
+                  "start": 1698285882503,
+                  "focus": false,
+                  "end": 1698303215926
                 }
               }
             ],
             "todo": {
-              "content": "• Change the model of collision for creatures into collision avoidance, so thatsmaller creatures would be able to detect possible collision with a larger onepreemptively and avoid the collision rather than bumping into it. And thenrather than turning away for a little while and still pursuing its desired food, itwill head for its 2nd desired food instead (up to 2pts).**",
+              "content": "• Change the model of collision for creatures into collision avoidance, so that smaller creatures would be able to detect possible collision with a larger one and avoid the collision rather than bumping into it. And then rather than turning away for a little while and still pursuing its desired food, it will head for its 2nd desired food instead (up to 2pts).**",
               "id": 1698285868911,
               "level": "default",
-              "done": false,
-              "start": 1698285868911
+              "done": true,
+              "start": 1698285868911,
+              "focus": false,
+              "end": 1698303215155
             }
           }
         ],
@@ -158,8 +168,10 @@
           "content": "BONUS (up to 2 pts): (Please note: if you have bonus features implemented, you mustnotify your TA by providing a comment to specify at the top of the panel class, or you maylose the bonus credit due to without notice by the TA)",
           "id": 1698285857039,
           "level": "default",
-          "done": false,
-          "start": 1698285857039
+          "done": true,
+          "start": 1698285857039,
+          "focus": false,
+          "end": 1698303214192
         }
       }
     ],
@@ -180,6 +192,6 @@
     "showEndTime": false,
     "simpleMode": false,
     "lang": "en",
-    "version": "1698296680605"
+    "version": "1698303215975"
   }
 }

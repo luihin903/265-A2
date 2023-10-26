@@ -3,6 +3,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Arc2D;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
@@ -17,6 +18,7 @@ public class Rabbit extends Object {
     private int speed;
     private Color color;
     private boolean moving = true;
+    private int escaping = 0;
     private float scale;
     private Area area;
     private static ArrayList<Rabbit> rabbits;
@@ -35,6 +37,7 @@ public class Rabbit extends Object {
     Ellipse2D.Double leftEye;
     Ellipse2D.Double rightEye;
     Line2D.Double[] face;
+    Arc2D.Double fov;
 
     // a constructor that initializes each of the fields with some parameter
     public Rabbit(PVector pos, PVector vel, PVector dim, int speed, Color color, boolean moving) {
@@ -110,6 +113,9 @@ public class Rabbit extends Object {
         area.add(new Area(topFoot));
         area.add(new Area(bottomFoot));
         area.add(new Area(tail));
+
+        float sight = 50 + dim.x * speed * 0.5f;
+        fov = new Arc2D.Double(-sight, -sight, sight*2, sight*2, -55, 110, Arc2D.PIE);
     }
 
     @Override
@@ -117,6 +123,7 @@ public class Rabbit extends Object {
         if (RabbitApp.drawBoundingBox) {
             g2.setColor(Color.PINK);
             g2.draw(getBoundary().getBounds2D());
+            g2.draw(getFOV().getBounds2D());
         }
 
         AffineTransform af = g2.getTransform();
@@ -125,9 +132,9 @@ public class Rabbit extends Object {
 
         // I don't know if this what you mean by "facing its moving direction", but the rabbits look weird.
         g2.rotate(vel.heading());
+        g2.draw(fov);
         if (vel.x < 0) g2.rotate(Math.PI);
         if (vel.x > 0) g2.scale(-1, 1);
-        
 
         // feet
         g2.setColor(color);
@@ -212,10 +219,27 @@ public class Rabbit extends Object {
         Rectangle2D.Double left = new Rectangle2D.Double(0, margin, margin, s.height-margin*2);
         Rectangle2D.Double right = new Rectangle2D.Double(s.width-margin, margin, margin, s.height-margin*2);
 
-        if (getBoundary().intersects(top)) vel.y = Math.abs(vel.y);
-        if (getBoundary().intersects(bottom)) vel.y = -Math.abs(vel.y);
-        if (getBoundary().intersects(left)) vel.x = Math.abs(vel.x);
-        if (getBoundary().intersects(right)) vel.x = -Math.abs(vel.x);
+        PVector accel = new PVector(0, 0);
+
+        if (getFOV().intersects(top)) accel.add(0, 1);
+        if (getFOV().intersects(bottom)) accel.add(0, -1);
+        if (getFOV().intersects(left)) accel.add(1, 0);
+        if (getFOV().intersects(right)) accel.add(-1, 0);
+
+        for (Rabbit r : rabbits) {
+            if (this.scale < r.scale && getFOV().intersects(r.getBoundary().getBounds2D())) {
+                if (r.pos.x < pos.x) accel.add(1, 0);
+                if (r.pos.x > pos.x) accel.add(-1, 0);
+                if (r.pos.y < pos.y) accel.add(0, 1);
+                if (r.pos.y > pos.y) accel.add(0, -1);
+                escaping = 30;
+            }
+        }
+        if (escaping != 0) escaping --;
+
+        vel.add(accel.mult(0.5f));
+        vel.normalize();
+        vel.mult(speed);
     }
 
     /*
@@ -226,15 +250,36 @@ public class Rabbit extends Object {
      */
     private void seek(ArrayList<Carrot> carrots) {
         if (carrots.size() != 0) {
-            float afc = 0;
-            for (Carrot c : carrots) {
-                float newAFC = c.getSize()*10 / PVector.dist(pos, c.getPos());
-                if (newAFC > afc) {
-                    afc = newAFC;
-                    vel = c.pos.copy();
-                    vel.sub(this.pos);
+            Carrot[] targets = new Carrot[2];
+            
+            // load 1 or 2 carrot(s) into the array
+            targets[0] = carrots.get(0);
+            if (carrots.size() > 1) {
+                if (getAFC(carrots.get(1)) > getAFC(targets[0])) {
+                    targets[1] = targets[0];
+                    targets[0] = carrots.get(1);
+                }
+                else {
+                    targets[1] = carrots.get(1);
                 }
             }
+
+            for (Carrot c : carrots) {
+                float newAFC = getAFC(c);
+                if (newAFC > getAFC(targets[0])) {
+                    if (carrots.size() > 1) targets[1] = targets[0];
+                    targets[0] = c;
+                }
+                else if (carrots.size() > 1) {
+                    System.out.println(carrots.size());
+                    System.out.println(targets[1]);
+                    System.out.println(c);
+                    if (newAFC > getAFC(targets[1])) targets[1] = c;
+                }
+            }
+
+            vel = targets[escaping > 0 ? 1 : 0].pos.copy();
+            vel.sub(this.pos);
         }
     }
 
@@ -276,6 +321,17 @@ public class Rabbit extends Object {
         if (vel.x < 0) at.rotate(Math.PI);
         if (vel.x > 0) at.scale(-1, 1);
         return at.createTransformedShape(area);
+    }
+
+    private Shape getFOV() {
+        AffineTransform at = new AffineTransform();
+        at.translate(pos.x, pos.y);
+        at.rotate(vel.heading());
+        return at.createTransformedShape(fov);
+    }
+
+    private float getAFC(Carrot c) {
+        return c.getSize()*10 / PVector.dist(this.pos, c.getPos());
     }
 
 }
