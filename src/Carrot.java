@@ -39,6 +39,25 @@ public class Carrot extends Object {
         setShape();
     }
 
+    private Carrot(PVector pos, int size) {
+        super(pos, default_dim.copy().mult(size/default_dim.x));
+
+        setShape();
+    }
+
+    public static void init(int n) {
+        for (int i = 0; i < n; i ++) {
+            spawn();
+        }
+    }
+
+    private static void spawn() {
+        int size = Util.random(50, 150);
+        PVector pos = Util.random(RabbitPanel.size, default_dim.copy().mult(size/default_dim.x));
+        carrots.add(new Carrot(pos, size));
+        System.out.println(pos);
+    }
+
     private void setShape() {
         ellipse = new Ellipse2D.Double((int) (-dim.x/4), (int) (-dim.y/2), (int) (dim.x/2), (int) (dim.y/4));
         int[] xPoints = {(int) (-dim.x/4), 0, (int) (dim.x/4)};
@@ -59,7 +78,7 @@ public class Carrot extends Object {
                 c.draw(g2);
             }
         }
-        System.out.println(carrots);
+        // System.out.println(carrots);
     }
 
     @Override
@@ -88,6 +107,7 @@ public class Carrot extends Object {
         if (carrots.get(i).size == 0) {
             carrots.remove(i);
             rabbit.start();
+            Carrot.spawn();
         }
     }
 
@@ -126,7 +146,7 @@ public class Carrot extends Object {
     public PVector getPos() {
         return pos;
     }
-    
+
     public Shape getBoundary() {
         AffineTransform at = new AffineTransform();
         at.translate(pos.x, pos.y);

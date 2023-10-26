@@ -74,19 +74,23 @@
           "content": "5) The food collection should be no less than 3 times of the number of creatures,which are randomly scattered within the environment.",
           "id": 1698285803327,
           "level": "default",
-          "done": false,
-          "start": 1698285803327
+          "done": true,
+          "start": 1698285803327,
+          "focus": false,
+          "end": 1698296669663
         }
       },
       {
         "key": 1698285808087,
         "children": [],
         "todo": {
-          "content": "6) Whenever a food is eaten, respawn another one with random size and randomlocation within the environment.",
+          "content": "6) Whenever a food is eaten, respawn another one with random size and random location within the environment.",
           "id": 1698285808087,
           "level": "default",
-          "done": false,
-          "start": 1698285808087
+          "done": true,
+          "start": 1698285808087,
+          "focus": false,
+          "end": 1698296680534
         }
       },
       {
@@ -176,6 +180,6 @@
     "showEndTime": false,
     "simpleMode": false,
     "lang": "en",
-    "version": "1698294870252"
+    "version": "1698296680605"
   }
 }

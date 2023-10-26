@@ -12,8 +12,8 @@ import javax.swing.Timer;
 
 public class RabbitPanel extends JPanel implements ActionListener {
     
-    private Dimension size;
     private Timer t;
+    public static Dimension size;
 
     public RabbitPanel(Dimension initialSize) {
         super();
@@ -24,6 +24,7 @@ public class RabbitPanel extends JPanel implements ActionListener {
         
         Tree.init(6, initialSize);
         Flower.init(6, initialSize);
+        Carrot.init(24); // greater or equal to 3 times the creatures are too many
 
         t = new Timer((int) (1000/RabbitApp.FPS), this);
         t.start();
