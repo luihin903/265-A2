@@ -31,11 +31,13 @@
         "key": 1698285744806,
         "children": [],
         "todo": {
-          "content": "3) Each of the creatures starts at a random location within the environment. Theirmotion must involve with moving along angular direction, and always facing itsmoving direction (as required in A2P1).",
+          "content": "3) Each of the creatures starts at a random location within the environment. Their motion must involve with moving along angular direction, and always facing its moving direction (as required in A2P1).",
           "id": 1698285744806,
           "level": "default",
-          "done": false,
-          "start": 1698285744806
+          "done": true,
+          "start": 1698285744806,
+          "focus": false,
+          "end": 1698291213166
         }
       },
       {
@@ -45,20 +47,24 @@
             "key": 1698285793290,
             "children": [],
             "todo": {
-              "content": "* Please note: For collision of creature vs. creature or creature vs. food, it must bedone by way of intersecting between their outlines and dynamic bounding boxes, which involves with Area class and non-drawing transformations. Usingold static bounding box approach will get 0 for the collision part.",
+              "content": "* Please note: For collision of creature vs. creature or creature vs. food, it must bedone by way of intersecting between their outlines and dynamic bounding boxes, which involves with Area class and non-drawing transformations. Using old static bounding box approach will get 0 for the collision part.",
               "id": 1698285793290,
               "level": "default",
-              "done": false,
-              "start": 1698285793290
+              "done": true,
+              "start": 1698285793290,
+              "focus": false,
+              "end": 1698294454231
             }
           }
         ],
         "todo": {
-          "content": "4) To make your creature smarter than phase 1, incorporate a model for yourcreature to pursue a “desired food” that has the largest “attraction forcecoefficient” (afc). The attraction force should be proportional to food size anddiminish with distance, so afc = food_size/distance (please note “/” is a division sign). So each of the creatures will always head for its desired food, and ignore the rest. It will turn to the next desired food only when the desired food is gone – either eaten by the creature itself or by other creature approaching faster toit.*",
+          "content": "4) To make your creature smarter than phase 1, incorporate a model for your creature to pursue a “desired food” that has the largest “attraction force coefficient” (afc). The attraction force should be proportional to food size and diminish with distance, so afc = food_size/distance (please note “/” is a division sign). So each of the creatures will always head for its desired food, and ignore the rest. It will turn to the next desired food only when the desired food is gone – either eaten by the creature itself or by other creature approaching faster toit.*",
           "id": 1698285770255,
           "level": "default",
-          "done": false,
-          "start": 1698285770255
+          "done": true,
+          "start": 1698285770255,
+          "focus": false,
+          "end": 1698294870175
         }
       },
       {
@@ -170,6 +176,6 @@
     "showEndTime": false,
     "simpleMode": false,
     "lang": "en",
-    "version": "1698289665298"
+    "version": "1698294870252"
   }
 }

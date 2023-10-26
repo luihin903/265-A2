@@ -1,10 +1,12 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
-
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 import processing.core.PVector;
@@ -16,8 +18,23 @@ public class Rabbit extends Object {
     private Color color;
     private boolean moving = true;
     private float scale;
+    private Area area;
     private static ArrayList<Rabbit> rabbits;
     private static final PVector default_dim = new PVector(50, 100);
+
+    // Shapes
+    Ellipse2D.Double bottomFoot;
+    Ellipse2D.Double topFoot;
+    Ellipse2D.Double bottomHand;
+    Ellipse2D.Double topHand;
+    Ellipse2D.Double leftEar;
+    Ellipse2D.Double rightEar;
+    Ellipse2D.Double body;
+    Ellipse2D.Double head;
+    Ellipse2D.Double tail;
+    Ellipse2D.Double leftEye;
+    Ellipse2D.Double rightEye;
+    Line2D.Double[] face;
 
     // a constructor that initializes each of the fields with some parameter
     public Rabbit(PVector pos, PVector vel, PVector dim, int speed, Color color, boolean moving) {
@@ -37,10 +54,7 @@ public class Rabbit extends Object {
         this.color = color;
         this.scale = scale;
 
-        System.out.println(scale);
-        System.out.println(default_dim);
-        System.out.println(dim);
-        System.out.println(default_dim.copy().mult(scale));
+        setShape();
 
     }
 
@@ -53,19 +67,69 @@ public class Rabbit extends Object {
         }
     }
 
+    private void setShape() {
+        // feet
+        bottomFoot = new Ellipse2D.Double((int) (-dim.x/2), (int) (dim.y/12*5), (int) (dim.x/6*4), (int) (dim.y/12));
+        topFoot = new Ellipse2D.Double((int) (-dim.x/6*2.5), (int) (dim.y/12*4), (int) (dim.x/6*4), (int) (dim.y/12));
+
+        // hands
+        bottomHand = new Ellipse2D.Double((int) (-dim.x/2), (int) (dim.y/12*1), (int) (dim.x/6*3), (int) (dim.y/12));
+        topHand = new Ellipse2D.Double((int) (-dim.x/6*2), 0, (int) (dim.x/6*3), (int) (dim.y/12));
+
+        // ears
+        leftEar = new Ellipse2D.Double((int) (-dim.x/6*1.5), (int) (-dim.y/2), (int) (dim.x/6), (int) (dim.y/12*4));
+        rightEar = new Ellipse2D.Double((int) (dim.x/6*0.5), (int) (-dim.y/2), (int) (dim.x/6), (int) (dim.y/12*4));
+
+        // body
+        body = new Ellipse2D.Double((int) (-dim.x/6*2), 0, (int) (dim.x/6*4), (int) (dim.y/2));
+        
+        // head
+        head = new Ellipse2D.Double((int) (-dim.x/6*2), (int) (-dim.y/12*4), (int) (dim.x/6*4), (int) (dim.y/12*4));
+
+        // tail
+        tail = new Ellipse2D.Double((int) (dim.x/6*2), (int) (dim.y/12*3), (int) (dim.x/6), (int) (dim.y/12));
+
+        // eyes
+        leftEye = new Ellipse2D.Double((int) (-dim.x/6), (int) (-dim.y/12*3), (int) (dim.x/6*0.5), (int) (dim.y/12*0.75));
+        rightEye = new Ellipse2D.Double((int) (dim.x/6*0.5), (int) (-dim.y/12*3), (int) (dim.x/6*0.5), (int) (dim.y/12*0.75));
+        
+        // face
+        face = new Line2D.Double[5];
+        face[0] = new Line2D.Double((int) (-dim.x/6*0.5), (int) (-dim.y/12*2), 0, (int) (-dim.y/12*1.5));
+        face[1] = new Line2D.Double((int) (dim.x/6*0.5), (int) (-dim.y/12*2), 0, (int) (-dim.y/12*1.5));
+        face[2] = new Line2D.Double(0, (int) (-dim.y/12*1.5), 0, (int) (-dim.y/12*1));
+        face[3] = new Line2D.Double(0, (int) (-dim.y/12*1), (int) (-dim.x/6*0.5), (int) (-dim.y/12*0.75));
+        face[4] = new Line2D.Double(0, (int) (-dim.y/12*1), (int) (dim.x/6*0.5), (int) (-dim.y/12*0.75));
+    
+        area = new Area(body);
+        area.add(new Area(head));
+        area.add(new Area(leftEar));
+        area.add(new Area(rightEar));
+        area.add(new Area(topHand));
+        area.add(new Area(bottomHand));
+        area.add(new Area(topFoot));
+        area.add(new Area(bottomFoot));
+        area.add(new Area(tail));
+    }
+
     @Override
     public void draw(Graphics2D g2) {
-        if (RabbitApp.drawBoundingBox) drawBoundingBox(g2);
+        if (RabbitApp.drawBoundingBox) {
+            g2.setColor(Color.PINK);
+            g2.draw(getBoundary().getBounds2D());
+        }
 
         AffineTransform af = g2.getTransform();
 
         g2.translate(pos.x, pos.y);
+
+        // I don't know if this what you mean by "facing its moving direction", but the rabbits look weird.
+        g2.rotate(vel.heading());
+        if (vel.x < 0) g2.rotate(Math.PI);
         if (vel.x > 0) g2.scale(-1, 1);
+        
 
         // feet
-        Ellipse2D.Double bottomFoot = new Ellipse2D.Double((int) (-dim.x/2), (int) (dim.y/12*5), (int) (dim.x/6*4), (int) (dim.y/12));
-        Ellipse2D.Double topFoot = new Ellipse2D.Double((int) (-dim.x/6*2.5), (int) (dim.y/12*4), (int) (dim.x/6*4), (int) (dim.y/12));
-        
         g2.setColor(color);
         g2.fill(bottomFoot);
         g2.fill(topFoot);
@@ -74,9 +138,6 @@ public class Rabbit extends Object {
         g2.draw(topFoot);
         
         // hands
-        Ellipse2D.Double bottomHand = new Ellipse2D.Double((int) (-dim.x/2), (int) (dim.y/12*1), (int) (dim.x/6*3), (int) (dim.y/12));
-        Ellipse2D.Double topHand = new Ellipse2D.Double((int) (-dim.x/6*2), 0, (int) (dim.x/6*3), (int) (dim.y/12));
-
         g2.setColor(color);
         g2.fill(bottomHand);
         g2.fill(topHand);
@@ -85,9 +146,6 @@ public class Rabbit extends Object {
         g2.draw(topHand);
 
         // ears
-        Ellipse2D.Double leftEar = new Ellipse2D.Double((int) (-dim.x/6*1.5), (int) (-dim.y/2), (int) (dim.x/6), (int) (dim.y/12*4));
-        Ellipse2D.Double rightEar = new Ellipse2D.Double((int) (dim.x/6*0.5), (int) (-dim.y/2), (int) (dim.x/6), (int) (dim.y/12*4));
-
         g2.setColor(color);
         g2.fill(leftEar);
         g2.fill(rightEar);
@@ -96,45 +154,29 @@ public class Rabbit extends Object {
         g2.draw(rightEar);
 
         // body
-        Ellipse2D.Double body = new Ellipse2D.Double((int) (-dim.x/6*2), 0, (int) (dim.x/6*4), (int) (dim.y/2));
-        
         g2.setColor(color);
         g2.fill(body);
         g2.setColor(Color.BLACK);
         g2.draw(body);
 
         // head
-        Ellipse2D.Double head = new Ellipse2D.Double((int) (-dim.x/6*2), (int) (-dim.y/12*4), (int) (dim.x/6*4), (int) (dim.y/12*4));
-
         g2.setColor(color);
         g2.fill(head);
         g2.setColor(Color.BLACK);
         g2.draw(head);
 
         // tail
-        Ellipse2D.Double tail = new Ellipse2D.Double((int) (dim.x/6*2), (int) (dim.y/12*3), (int) (dim.x/6), (int) (dim.y/12));
-        
         g2.setColor(color);
         g2.fill(tail);
         g2.setColor(Color.BLACK);
         g2.draw(tail);
 
         // eyes
-        Ellipse2D.Double leftEye = new Ellipse2D.Double((int) (-dim.x/6), (int) (-dim.y/12*3), (int) (dim.x/6*0.5), (int) (dim.y/12*0.75));
-        Ellipse2D.Double rightEye = new Ellipse2D.Double((int) (dim.x/6*0.5), (int) (-dim.y/12*3), (int) (dim.x/6*0.5), (int) (dim.y/12*0.75));
-        
         g2.setColor(Color.RED);
         g2.fill(leftEye);
         g2.fill(rightEye);
 
         // face
-        Line2D.Double[] face = new Line2D.Double[5];
-        face[0] = new Line2D.Double((int) (-dim.x/6*0.5), (int) (-dim.y/12*2), 0, (int) (-dim.y/12*1.5));
-        face[1] = new Line2D.Double((int) (dim.x/6*0.5), (int) (-dim.y/12*2), 0, (int) (-dim.y/12*1.5));
-        face[2] = new Line2D.Double(0, (int) (-dim.y/12*1.5), 0, (int) (-dim.y/12*1));
-        face[3] = new Line2D.Double(0, (int) (-dim.y/12*1), (int) (-dim.x/6*0.5), (int) (-dim.y/12*0.75));
-        face[4] = new Line2D.Double(0, (int) (-dim.y/12*1), (int) (dim.x/6*0.5), (int) (-dim.y/12*0.75));
-        
         g2.setColor(Color.BLACK);
 
         for (int i = 0; i < 5; i ++) g2.draw(face[i]);
@@ -147,18 +189,12 @@ public class Rabbit extends Object {
     }
 
     public void move(ArrayList<Carrot> carrots, Dimension s) {
-        
         if (moving) {
+            checkCollision(s);
+
             seek(carrots);
             vel.normalize();
             vel.mult(speed);
-
-            if (pos.x < dim.x/2 + RabbitApp.margin || pos.x > s.width - RabbitApp.margin - dim.x/2) {
-                vel.x *= -1;
-            }
-            if (pos.y < dim.y/2 + RabbitApp.margin || pos.y > s.height - RabbitApp.margin - dim.y/2) {
-                vel.y *= -1;
-            }
 
             pos.add(vel);
         }
@@ -167,6 +203,21 @@ public class Rabbit extends Object {
     public static void moveAll(ArrayList<Carrot> carrots, Dimension s) {
         for (Rabbit r : rabbits) r.move(carrots, s);
     }
+    
+    private void checkCollision(Dimension s) {
+        int margin = RabbitApp.margin;
+
+        Rectangle2D.Double top = new Rectangle2D.Double(margin, 0, s.width-margin*2, margin);
+        Rectangle2D.Double bottom = new Rectangle2D.Double(margin, s.height-margin, s.width-margin*2, margin);
+        Rectangle2D.Double left = new Rectangle2D.Double(0, margin, margin, s.height-margin*2);
+        Rectangle2D.Double right = new Rectangle2D.Double(s.width-margin, margin, margin, s.height-margin*2);
+
+        if (getBoundary().intersects(top)) vel.y = Math.abs(vel.y);
+        if (getBoundary().intersects(bottom)) vel.y = -Math.abs(vel.y);
+        if (getBoundary().intersects(left)) vel.x = Math.abs(vel.x);
+        if (getBoundary().intersects(right)) vel.x = -Math.abs(vel.x);
+    }
+
     /*
      * 1. check if the arraylist is empty
      * 2. get the first carrot
@@ -175,9 +226,15 @@ public class Rabbit extends Object {
      */
     private void seek(ArrayList<Carrot> carrots) {
         if (carrots.size() != 0) {
-            Carrot c = carrots.get(0);
-            vel = c.pos.copy();
-            vel.sub(this.pos);
+            float afc = 0;
+            for (Carrot c : carrots) {
+                float newAFC = c.getSize()*10 / PVector.dist(pos, c.getPos());
+                if (newAFC > afc) {
+                    afc = newAFC;
+                    vel = c.pos.copy();
+                    vel.sub(this.pos);
+                }
+            }
         }
     }
 
@@ -186,7 +243,7 @@ public class Rabbit extends Object {
         
         for (int i = 0; i < carrots.size(); i ++) {
             if (carrots.get(i) != null) {
-                if (PVector.dist(this.pos, carrots.get(i).pos) < 50) {
+                if (this.getBoundary().intersects(carrots.get(i).getBoundary().getBounds2D())) {
                     stop();
                     Carrot.eat(i, this);
                 }
@@ -210,6 +267,15 @@ public class Rabbit extends Object {
 
     public ArrayList<Rabbit> getAll() {
         return rabbits;
+    }
+
+    private Shape getBoundary() {
+        AffineTransform at = new AffineTransform();
+        at.translate(pos.x, pos.y);
+        at.rotate(vel.heading());
+        if (vel.x < 0) at.rotate(Math.PI);
+        if (vel.x > 0) at.scale(-1, 1);
+        return at.createTransformedShape(area);
     }
 
 }
