@@ -10,11 +10,8 @@ import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import processing.core.PVector;
-
 public class RabbitPanel extends JPanel implements ActionListener {
     
-    private Rabbit rabbit;
     private Dimension size;
     private Timer t;
 
@@ -23,9 +20,10 @@ public class RabbitPanel extends JPanel implements ActionListener {
 
         size = initialSize;
 
-        rabbit = new Rabbit(new PVector(size.width/2, size.height/2), new PVector(50, 100), 2);
-        Tree.init(5, initialSize);
-        Flower.init(5, initialSize);
+        Rabbit.init(size, Util.random(5, 8));
+        
+        Tree.init(6, initialSize);
+        Flower.init(6, initialSize);
 
         t = new Timer((int) (1000/RabbitApp.FPS), this);
         t.start();
@@ -46,7 +44,7 @@ public class RabbitPanel extends JPanel implements ActionListener {
         Tree.drawAll(g2);
         Carrot.drawAll(g2);
         Flower.drawAll(g2);
-        rabbit.draw(g2);
+        Rabbit.drawAll(g2);
 
         // g2.drawOval(0, 0, 100, 100);
         // g2.drawOval(size.width-20-100, size.height-20-100, 100, 100);
@@ -59,8 +57,8 @@ public class RabbitPanel extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        rabbit.move(Carrot.get(), getSize());
-        rabbit.eat(Carrot.get());
+        Rabbit.moveAll(Carrot.get(), getSize());
+        Rabbit.eatAll(Carrot.get());
         Carrot.grow();
 
         repaint();

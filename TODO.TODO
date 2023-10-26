@@ -5,22 +5,26 @@
         "key": 1698285724497,
         "children": [],
         "todo": {
-          "content": "1) Enlarge your environment, making its size no less than 1200X800 toaccommodate collections of creature and food, while maintaining a margin to thepanel edges no less than 50 on each side (Please note adjustment to marginsize).",
+          "content": "1) Enlarge your environment, making its size no less than 1200X800 to accommodate collections of creature and food, while maintaining a margin to thepanel edges no less than 50 on each side (Please note adjustment to marginsize).",
           "id": 1698285724497,
           "level": "default",
-          "done": false,
-          "start": 1698285724497
+          "done": true,
+          "start": 1698285724497,
+          "focus": false,
+          "end": 1698287111437
         }
       },
       {
         "key": 1698285734651,
         "children": [],
         "todo": {
-          "content": "2) Create several creatures (5 ~ 8 to be desirable) and place them into an ArrayList.These creatures should be of different sizes (randomly generated, within certainrange – test to find the desired size range for your own right), and haverandomized colors for body or certain feature e.g. stripes.",
+          "content": "2) Create several creatures (5 ~ 8 to be desirable) and place them into an ArrayList. These creatures should be of different sizes (randomly generated, within certainrange – test to find the desired size range for your own right), and have randomized colors for body or certain feature e.g. stripes.",
           "id": 1698285734651,
           "level": "default",
-          "done": false,
-          "start": 1698285734651
+          "done": true,
+          "start": 1698285734651,
+          "focus": false,
+          "end": 1698289665214
         }
       },
       {
@@ -159,12 +163,13 @@
     "add_mode": "bottom",
     "virtual": false,
     "showLine": false,
-    "playFontSize": 24,
+    "restDays": [],
+    "playFontSize": "24",
     "title": "TODO",
     "autoSort": false,
     "showEndTime": false,
     "simpleMode": false,
     "lang": "en",
-    "version": "1698285893354"
+    "version": "1698289665298"
   }
 }

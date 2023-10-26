@@ -15,6 +15,9 @@ public class Rabbit extends Object {
     private int speed;
     private Color color;
     private boolean moving = true;
+    private float scale;
+    private static ArrayList<Rabbit> rabbits;
+    private static final PVector default_dim = new PVector(50, 100);
 
     // a constructor that initializes each of the fields with some parameter
     public Rabbit(PVector pos, PVector vel, PVector dim, int speed, Color color, boolean moving) {
@@ -27,11 +30,27 @@ public class Rabbit extends Object {
         this.moving = moving;
     }
 
-    public Rabbit(PVector pos, PVector dim, int speed) {
+    public Rabbit(PVector pos, PVector dim, int speed, Color color, float scale) {
         super(pos, dim);
         this.speed = speed;
         this.vel = new PVector(Util.random(-100, 100), Util.random(-100, 100));
-        this.color = Color.WHITE;
+        this.color = color;
+        this.scale = scale;
+
+        System.out.println(scale);
+        System.out.println(default_dim);
+        System.out.println(dim);
+        System.out.println(default_dim.copy().mult(scale));
+
+    }
+
+    public static void init(Dimension s, int n) {
+        rabbits = new ArrayList<Rabbit>();
+
+        for (int i = 0; i < n; i ++) {
+            float scale = Util.random(0.5f, 1.5f);
+            rabbits.add(new Rabbit(Util.random(s, default_dim.copy().mult(scale)), default_dim.copy().mult(scale), 2, Util.random(), scale));
+        }
     }
 
     @Override
@@ -123,6 +142,10 @@ public class Rabbit extends Object {
         g2.setTransform(af);
     }
 
+    public static void drawAll(Graphics2D g2) {
+        for (Rabbit r : rabbits) r.draw(g2);
+    }
+
     public void move(ArrayList<Carrot> carrots, Dimension s) {
         
         if (moving) {
@@ -141,6 +164,9 @@ public class Rabbit extends Object {
         }
     }
 
+    public static void moveAll(ArrayList<Carrot> carrots, Dimension s) {
+        for (Rabbit r : rabbits) r.move(carrots, s);
+    }
     /*
      * 1. check if the arraylist is empty
      * 2. get the first carrot
@@ -168,6 +194,10 @@ public class Rabbit extends Object {
         }
     }
 
+    public static void eatAll(ArrayList<Carrot> carrots) {
+        for (Rabbit r : rabbits) r.eat(carrots);
+    }
+
     public void start() {
         moving = true;
     }
@@ -175,4 +205,11 @@ public class Rabbit extends Object {
     public void stop() {
         moving = false;
     }
+
+
+
+    public ArrayList<Rabbit> getAll() {
+        return rabbits;
+    }
+
 }

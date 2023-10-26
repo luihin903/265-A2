@@ -31,13 +31,13 @@ public abstract class Util {
     public static PVector random(Dimension s, PVector dim) {
         float x, y;
         
-        if ((s.width == 800 && s.height == 600) || (s.width == 1280 && s.height == 720)) {
+        if (s.width == RabbitApp.default_size.x && s.height == RabbitApp.default_size.y) {
             x = random(RabbitApp.margin + dim.x/2 + 14, s.width - RabbitApp.margin - dim.x/2 - 14); // my panel is 14px thinner than initial size
-            y = random(RabbitApp.margin + dim.y/2 + 37, s.height - RabbitApp.margin - dim.y/2 - 37); // my panel is 37px shorter than initial size
+            y = random(RabbitApp.margin + dim.y/2 + 100, s.height - RabbitApp.margin - dim.y/2 - 100); // my panel is 100px shorter than initial size
         }
         else {
-            x = random(RabbitApp.margin + dim.x/2, s.width - RabbitApp.margin - dim.x/2);
-            y = random(RabbitApp.margin + dim.y/2, s.height - RabbitApp.margin - dim.y/2);
+            x = random(RabbitApp.margin + dim.x/2, s.width - RabbitApp.margin - dim.x/2); // my panel is 14px thinner than initial size
+            y = random(RabbitApp.margin + dim.y/2, s.height - RabbitApp.margin - dim.y/2); // my panel is 100px shorter than initial size
         }
         
         return new PVector(x, y);
